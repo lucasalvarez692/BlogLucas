@@ -1,0 +1,106 @@
+@startuml
+package "Interfaz" {
+    class ProgramaPrincipal {
+        + main(args: String[]) : void
+    }
+}
+
+package "Control" {
+    class Controladora {
+        - blogs : Map<Integer, Blog>
+
+        + Controladora()
+        + crearBlog(nombre: String, descripcion: String) : void
+        + borrarBlog(codigoBlog: int) : boolean
+        + crearPublicacion(codigoBlog: int, titulo: String, texto: String, nombreCreador: String) : void
+        + obtenerBlogs() : Map<Integer, Blog>
+        + obtenerPublicaciones(codigoBlog: int) : String
+        + obtenerPublicacion(codigoBlog: int, codigoPublicacion: int) : String
+        + agregarComentario(codigoBlog: int, codigoPublicacion: int, email: String, ip: String, texto: String) : boolean
+        + borrarComentario(codigoBlog: int, codigoPublicacion: int, posicion: int) : boolean
+    }
+}
+
+package "Lógica" {
+
+    class Blog {
+        - codigo: int
+        - nombre: String
+        - descripcion: String
+        - fechaCreacion: LocalDateTime
+        - publicacion: List<Publicacion>
+        - tituloPublicacion: Map<Integer, String>
+
+        + Blog(nombre: String, descripcion: String)
+        + getCodigo(): int
+        + getNombre(): String
+        + setNombre(nombre: String): void
+        + getDescripcion(): String
+        + setDescripcion(descripcion: String): void
+        + getFechaCreacion(): LocalDateTime
+
+        + agregarPublicacion(titulo: String, texto: String, nombreCreador: String): void
+        + eliminarPublicacion(codigoPublicacion: int): boolean
+        + buscarPublicacion(codigoPublicacion: int): Publicacion
+        + getPublicacion(): List<Publicacion>
+
+        + obtenerTituloPublicacion(): Map<Integer, String>
+
+        + agregarComentario(codigoPublicacion: int, email: String, ip: String, texto: String): boolean
+        + eliminarComentario(codigoPublicacion: int, posicion: int): boolean
+
+        + toString(): String
+    }
+
+    class Publicacion {
+        - codigo: int
+        - titulo: String
+        - texto: String
+        - nombreCreador: String
+        - fechaPublicacion: LocalDateTime
+        - comentarios: List<Comentario>
+
+        + Publicacion(titulo: String, texto: String, nombreCreador: String)
+
+        + getCodigo(): int
+        + setCodigo(codigo: int): void
+        + getTitulo(): String
+        + setTitulo(titulo: String): void
+        + getTexto(): String
+        + setTexto(texto: String): void
+        + getNombreCreador(): String
+        + setNombreCreador(nombreCreador: String): void
+        + getFechaPublicacion(): LocalDateTime
+
+        + agregarComentario(comentario: Comentario): void
+        + eliminarComentario(indice: int): boolean
+
+        + getComentarios(): List<Comentario>
+
+        + toString(): String
+    }
+
+    class Comentario {
+        - fecha: LocalDateTime
+        - email: String
+        - direccionIP: String
+        - texto: String
+
+        + Comentario(email: String, direccionIP: String, texto: String)
+        + getFecha(): LocalDateTime
+        + getEmail(): String
+        + setEmail(email: String): void
+        + getDireccionIP(): String
+        + setDireccionIP(direccionIP: String): void
+        + getTexto(): String
+        + setTexto(texto: String): void
+        + toString(): String
+    }
+}
+
+' Relaciones
+ProgramaPrincipal --> Controladora
+Controladora --> Blog
+Blog --> "0..*" Publicacion
+Publicacion --> "0..*" Comentario
+@enduml
